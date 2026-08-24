@@ -20,7 +20,7 @@ import java.util.Optional;
 
 @Tag(name = "Lanches", description = "Controle de lanches da cantina")
 @RestController
-@RequestMapping("/")
+@RequestMapping("/HotCantina")
 public class LancheController {
 
     @Autowired
@@ -33,7 +33,7 @@ public class LancheController {
             @ApiResponse(responseCode = "400", description = "Dados inválidos (Nome menor que 2 letras ou maior que 150 | Preco menor que 0)."),
     })
 
-    @PostMapping()
+    @PostMapping("/Cadastrar")
     public ResponseEntity <LancheResponseDTO> cadastrar (@Valid @RequestBody LancheRequestDTO lanche){
         return ResponseEntity.status(HttpStatus.CREATED).body(lancheService.cadastrar(lanche));
     }
@@ -42,7 +42,7 @@ public class LancheController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Lanches listados com sucesso.")
     })
-    @GetMapping()
+    @GetMapping("/Listar")
     public List<LancheResumoDTO> listar (@RequestParam(required = false) String nome){
         return lancheService.listar(nome);
     }
@@ -52,7 +52,7 @@ public class LancheController {
             @ApiResponse(responseCode = "200", description = "Lanche encontrado com sucesso."),
             @ApiResponse(responseCode = "404", description = "Não tem lanche cadastrado com esse id.")
     })
-    @GetMapping("/{id}")
+    @GetMapping("/Listar/{id}")
     public Optional<Lanche> buscarPorId(@PathVariable Long id){
         return lancheService.buscarPorId(id);
     }
@@ -63,7 +63,7 @@ public class LancheController {
             @ApiResponse(responseCode = "400", description = "Dados inválidos (Nome menor que 2 letras ou maior que 150 | Preco <= 0)."),
             @ApiResponse(responseCode = "404", description = "Não tem lanche cadastrado com esse id."),
     })
-    @PutMapping("/{id}")
+    @PutMapping("Atualizar/{id}")
     public LancheResponseDTO atualizar (@PathVariable Long id, @Valid @RequestBody LancheRequestDTO novo){
         return lancheService.atualizar(id,novo);
     }
@@ -73,7 +73,7 @@ public class LancheController {
             @ApiResponse(responseCode = "200", description = "Lanche removido com sucesso"),
             @ApiResponse(responseCode = "404", description = "Não tem lanche cadastrado com esse id.")
     })
-    @DeleteMapping("/{id}")
+    @DeleteMapping("Excluir/{id}")
     public void excluir(@PathVariable Long id){
         lancheService.excluir(id);
     }
