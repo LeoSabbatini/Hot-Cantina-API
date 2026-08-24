@@ -29,28 +29,29 @@ public class LancheService {
 
     public LancheResumoDTO toResumoDTO(Lanche lanche) {
         return new LancheResumoDTO(
-              lanche.getNome(), lanche.getPreco()
+              lanche.getId(), lanche.getNome(), lanche.getPreco()
         );
     }
 
 
 
     public LancheResponseDTO cadastrar(LancheRequestDTO dto) {
-        Lanche lanche = new Lanche();
-        lanche.setNome(dto.nome());
-        lanche.setDescricao(dto.descricao());
-        lanche.setPreco(dto.preco());
-
+        Lanche lanche = Lanche.builder().nome(dto.nome()).descricao(dto.descricao()).preco(dto.preco()).build();
         Lanche salvo = lancheRepository.save(lanche);
-
         return toResponseDTO(salvo);
     }
 
-    public List<LancheResumoDTO> listar(){
+    public List<LancheResumoDTO> listar(String nome){
+        if(nome != null){
+            return lancheRepository.findByNome(nome)
+                    .stream()
+                    .map(this::toResumoDTO)
+                    .toList();
+        }else{
         return lancheRepository.findAll()
                 .stream()
                 .map(this::toResumoDTO)
-                .toList();
+                .toList();}
     }
 
     public Optional<Lanche> buscarPorId(Long id) {

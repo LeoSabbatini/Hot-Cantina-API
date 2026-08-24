@@ -11,6 +11,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,17 +34,17 @@ public class LancheController {
     })
 
     @PostMapping()
-    public LancheResponseDTO cadastrar (@Valid @RequestBody LancheRequestDTO lanche){
-        return lancheService.cadastrar(lanche);
+    public ResponseEntity <LancheResponseDTO> cadastrar (@Valid @RequestBody LancheRequestDTO lanche){
+        return ResponseEntity.status(HttpStatus.CREATED).body(lancheService.cadastrar(lanche));
     }
 
-    @Operation(summary = "Lista todos os lanches filtrando apenas o nome e o preco.")
+    @Operation(summary = "Lista todos os lanches filtrando apenas o nome e o preco.", description = "Opcao para listar por nome.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Lanches listados com sucesso.")
     })
     @GetMapping()
-    public List<LancheResumoDTO> listar (){
-        return lancheService.listar();
+    public List<LancheResumoDTO> listar (@RequestParam(required = false) String nome){
+        return lancheService.listar(nome);
     }
 
     @Operation(summary = "Busca um lanche pelo id.")

@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 
 @Builder
 public record LancheResumoDTO(
+        Long id,
         String nome,
         BigDecimal preco
 ) {
