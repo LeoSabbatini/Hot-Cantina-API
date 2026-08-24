@@ -1,7 +1,7 @@
 package com.hotcantina.exception;
 
 public class RecursoNaoEncontradoException extends RuntimeException {
-  public RecursoNaoEncontradoException(String message) {
-    super(message);
-  }
+    public RecursoNaoEncontradoException(String mensagem) {
+        super(mensagem);
+    }
 }
