@@ -3,6 +3,7 @@ package com.hotcantina.service;
 import com.hotcantina.dto.LancheRequestDTO;
 import com.hotcantina.dto.LancheResponseDTO;
 import com.hotcantina.dto.LancheResumoDTO;
+import com.hotcantina.exception.RecursoNaoEncontradoException;
 import com.hotcantina.model.Lanche;
 import com.hotcantina.repository.LancheRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,11 +54,11 @@ public class LancheService {
     }
 
     public Optional<Lanche> buscarPorId(Long id) {
-        return lancheRepository.findById(id);
+        return Optional.of(lancheRepository.findById(id).orElseThrow(() -> new RecursoNaoEncontradoException("Lanche com id: " + id + " não encontrado.")));
     }
 
     public LancheResponseDTO atualizar (Long id, LancheRequestDTO dto){
-        Lanche atual = lancheRepository.findById(id).orElseThrow(()-> new RuntimeException());
+        Lanche atual = lancheRepository.findById(id).orElseThrow(() -> new RecursoNaoEncontradoException("Lanche com id: " + id + " não encontrado."));
         atual.setNome(dto.nome());
         atual.setPreco(dto.preco());
         atual.setDescricao(dto.descricao());
@@ -67,6 +68,9 @@ public class LancheService {
     }
 
     public void excluir (Long id){
+        if (!lancheRepository.existsById(id)) {
+            throw new RecursoNaoEncontradoException("Lanche com id: " + id + " não encontrado.");
+        }
         lancheRepository.deleteById(id);
     }
 
